@@ -16,21 +16,6 @@
         .question,.result {
             display: none;
         }
-
-        .progress-bar {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            -ms-flex-pack: center;
-            justify-content: center;
-            overflow: hidden;
-            color: gray;
-            text-align: center;
-            white-space: nowrap;
-            background-color: #000;
-            transition: width .6s ease;
-        }
         button {
             border: 4px solid gray;
             margin: 0 auto;
@@ -49,9 +34,6 @@
 
     <!-- 강아지 성격 유형 테스트 화면, 버튼 2개로 답변 함-->
     <article class="question">
-        <div>
-            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
-        </div>
         <h2 id="title">문제</h2>
         <input id="type" type="hidden" value="EI">
         <button id="A" type="button">대답1</button>
@@ -63,7 +45,7 @@
         <h4>나의 강아지 유형과 MBTI는?</h4>
         <h2 id="animal">결과 강아지</h2>
         <h3 id="explain">설명</h3>
-        <button onclick="window.location.href='#'">결과 확인</button>
+        <button onclick="window.location.reload()">다시하기</button>
     </article>
 </div>
 
@@ -233,7 +215,6 @@
         const startButton = document.querySelector('.start button');
         const questionSection = document.querySelector('.question');
         const resultSection = document.querySelector('.result');
-        const progressBar = document.querySelector('.progress-bar');
         const buttonA = document.getElementById('A');
         const buttonB = document.getElementById('B');
 
@@ -310,9 +291,6 @@
                     });
 
             } else {
-                if (progressBar) {
-                    progressBar.style.width = `calc(100/12*${num}%)`;
-                }
                 const titleElement = document.getElementById('title');
                 const typeElement = document.getElementById('type');
 
