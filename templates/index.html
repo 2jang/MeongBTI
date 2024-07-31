@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBTI 테스트</title>
+    <style>
+        body {
+            background-color: #feeab5;
+        }
+
+        article {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question,.result {
+            display: none;
+        }
+
+        .progress-bar {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -ms-flex-pack: center;
+            justify-content: center;
+            overflow: hidden;
+            color: gray;
+            text-align: center;
+            white-space: nowrap;
+            background-color: #000;
+            transition: width .6s ease;
+        }
+        button {
+            border: 4px solid gray;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <!-- 강아지 성격 유형 테스크 시작 화면 -->
+    <article class="start">
+        <h1>강아지 성격 유형 테스트(DBTI)</h1>
+        <h2>12문제로 알아보는 나의 강아지 성격 유형은? 테스트로 알아보자!</h2>
+        <button type="button" onclick="start();">테스트 시작하기</button> <!-- 시작하기 버튼 누르면 start 가려지고 question 보임 -->
+    </article>
+
+    <!-- 강아지 성격 유형 테스트 화면, 버튼 2개로 답변 함-->
+    <article class="question">
+        <div>
+            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+        <h2 id="title">문제</h2>
+        <input id="type" type="hidden" value="EI">
+        <button id="A" type="button">대답1</button>
+        <button id="B" type="button">대답2</button>
+    </article>
+
+    <!-- 결과 창, 결과 강아지와 설명을 출력 -->
+    <article class="result">
+        <h4>나의 강아지 유형과 MBTI는?</h4>
+        <h2 id="animal">결과 강아지</h2>
+        <h3 id="explain">설명</h3>
+        <button onclick="window.location.href='#'">결과 확인</button>
+    </article>
+</div>
+
+<input type="hidden" id="EI" value="0">
+<input type="hidden" id="SN" value="0">
+<input type="hidden" id="TF" value="0">
+<input type="hidden" id="JP" value="0">
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+
+    var num = 1;
+
+    var q = {
+        1: {
+            "title": "오랜만에 산책을 나가려 한다. 어디로 갈까?",
+            "type": "EI",
+            "A": "친구가 기다리고 있는 공원 (사람 많음)",
+            "B": "여유롭고 한산하며 혼자 즐길 수 있는 공원 (사람 적음)"
+        },
+        2: {
+            "title": "공원으로 가는 도 중, 모르는 친구가 와서 반갑다며 인사를 한다. 어떻게 할까?",
+            "type": "EI",
+            "A": "나도 반갑다고 인사한다.",
+            "B": "누군지를 먼저 알아본다. (결계하며)"
+        },
+        3: {
+            "title": "가고 있는데 친구들이 모여 놀고 있다! 나는 어떻게 할까?",
+            "type": "EI",
+            "A": "같이 놀자며 달려간다.",
+            "B": "그냥 놀고있는 모습을 구경하며 천천히 웃으며 본다."
+        },
+        4: {
+            "title": "또 가고 있었는데 갈림길이 나왔다! 나는 어떤 길로 갈까?",
+            "type": "SN",
+            "A": "혹시 몰라! 매일매일 가던 왼쪽 길!",
+            "B": "오늘은 특별하게 가야지! 오른쪽 길로 가자!"
+        },
+        5: {
+            "title": "갈림길을 넘었는데, 누군가가 길을 물어본다. 뭐라고 설명해줄까?",
+            "type": "SN",
+            "A": "왼쪽 길로 가시면 도서관이 나오는데 거기에서 오른쪽으로 가면 있어요! 구체적으로 설명한다.",
+            "B": "저기 큰 도로 옆에 오른쪽 큰 길로 가면 있어요! 단순하게 큰 길로 설명한다."
+        },
+        6: {"title": "공원에 도착했다! 나에게는 ", "type": "SN", "A": "공원에 왔다! 라는게 중요함", "B": "공원에 오는 과정이 중요함"},
+        7: {
+            "title": "공원에서 쉬는 중, 어떤 친구가 짜증이 난다며 투덜투덜대며 나에게 다가온다.",
+            "type": "TF",
+            "A": "무슨일인지 먼저 물어본다.",
+            "B": "먼저 격려해준다 속상해? 어떡해ㅠㅠ 마음 풀어~"
+        },
+        8: {
+            "title": "덕분에 친구의 마음이 풀렸다. 근데 벌써 집에 갈 시간이다. 친구와 다음에 만나기로 약속하며",
+            "type": "TF",
+            "A": "언제쯤에 만날까? 시간은 언제?",
+            "B": "그냥 둘 다 시간 날 때 만나자!"
+        },
+        9: {
+            "title": "집에 도착했다. 근데 집이 완전 어지럽네. 나는",
+            "type": "TF",
+            "A": "아우 어지러워~~ 바로 청소한다.",
+            "B": "아오 귀찮아 귀찮아 다음에 치우지~ (하면서 안치움)"
+        },
+        10: {"title": "행복한 하루네! 자기전에", "type": "JP", "A": "내일 뭐할까? 계획을 먼저 한다.", "B": "내일은 그냥 내일 생각하지 뭐~"},
+        11: {
+            "title": "내일은 언제쯤 일어날까?",
+            "type": "JP",
+            "A": "아침 7시에 일어나서 할일 해야지~ 내일 할 일도 넘쳐나네~",
+            "B": "아, 몰라 몰라 그냥 10쯤에 일어나야지 어우 귀찮아"
+        },
+        12: {
+            "title": "일어났다. 어떤거 먼저 할까?",
+            "type": "JP",
+            "A": "역시 일어났으면 세수하고 밥 먼저 먹어야지",
+            "B": "아 몰라 먼저 귀찮으니까 먼저 놀아야지 아 그런데 일어나기도 귀찮아~"
+        }
+    }
+    <!---->
+    var result = {
+        "ISTJ": {
+            "animal": "청결 결백한, 시베리안 허스키: ISTJ",
+            "explain": "1.조용한 성격임, 2.낯선 곳에 나서기를 주저함, 3.낯가림이 심함, 4.이유 없이 돌아다니지 않음, 5.규칙적인 일을 좋아함, 6.주어진 업무를 끝가지 완수함, 7.변화가 싫음, 8.실수한 것을 참지 못함, 9.논리적이거나 합리적이지 않으면 인정하지 못함, 10.단체 생활에도 잘 적응함",
+            "img": "시베리안허스키.png"
+        },
+        "ENTP": {
+            "animal": "능력 많은 변론가, 말티즈: ENTP",
+            "explain": "1.다재다능하다, 2.두뇌 회전이 빠름, 3.벼락치기를 좋아하고 성과도 꽤 좋음, 4.눈치가 빠름, 5.자존감이 매우 높고 자기가 맞다고 확신이 강함, 6.타인의 생각을 읽고 이해하는 능력이 뛰어나고 대화를 매력적으로 이끌어나감, 7.다른 사람들이 자신을 무시하는 것을 굉장하게 싫어함, 8.무엇을 하든지 평균보다는 이상임, 9.본인의 생각을 잠깐의 생각도 없이 말함 그래서 자칫 사고가 날 때가 많음, 9.좋아하는 것과 싫어하는 게 명확함",
+            "img": "말티즈.jpg"
+        },
+        "ENTJ": {
+            "animal": "통솔자 웰시코기: ENTJ",
+            "explain": "1.계획적임 성격임, 2.호기심과 지적 욕구가 많음, 3.권위적이지 않음, 4.솔직하고 결단력, 통솔력이 있음, 5.자기주관이 가장 확고함 그래서 나이 들면 꼰대라고 불릴 수 있음, 6.똑같은 생활을 지겨워함, 7.감정표현이 솔직함, 8.어려운 일을 만나도 쉽게 처리함, 9.세상에는 믿을 사람이 나 밖에 없을 것이라 생각함",
+            "img": "웰시코기.jpg"
+        },
+        "ENFP": {
+            "animal": "예쁜 웃음, 퍼그: ENFP",
+            "explain": "1.감정이 얼굴에 잘 드러남, 2.감수성이 많고 눈물이 많음, 3.위기의 대처능력이 뛰어남, 4.새로운 사람 만나기를 좋아함, 5.말이 엄청 많음, 6.정이 많음, 7.어떤 것에 쉽게 열중했다 쉽게 그만둠, 8.돌려 말하기를 선호함, 9.하기 싫어하는 일을 끝가지 안하고 싶어함",
+            "img": "퍼그.jpg"
+        },
+        "ESTJ": {
+            "animal": "엄격한 불독: ESTJ",
+            "explain": "1.외향적이고 감정을 직접적으로 드러냄, 2.호불호가 매우 명확함, 3.모든 일을 계획적으로 실행함, 4.예약, 계획을 생활화 하려고 노력함, 5.싸움을 매우 싫어하지만, 싸우고 지는 건 더 싫어함, 6.여우로우면 불안한 생각이 듬, 7.지배하려는 성격이 있어도 양보는 하지 않음, 8.가만히 있으면 피곤해짐, 9.리더 역할을 그렇게 좋아하지는 않은데 하라고 하면 잘함 ",
+            "img": "불독.jpg"
+        },
+        "INFJ": {
+            "animal": "좋은 옹호자 요크셔테리어: INFJ",
+            "explain": "1.MBTI 유형 중 가장 희귀한 유형임, 2.계획적인 것을 선호하여 항상 계획을함, 3.인내심이 매우매우매우매우 높고, 배려가 생활화 되어있다, 4.같은 나이여도 어른스러움, 5.국어에 강함, 6.영감이 뛰어남, 7.요즘 유행하는 것에 그렇게 큰 관심이 없음, 8.남에게 민폐 끼치는 것을 매우매우 싫어함, 9.감정 기복이 무지무지 크지만, 웬만해선 직접적으로는 감정을 잘 드러내지 않는다",
+            "img": "요크셔테리어.jpg"
+        },
+        "INTJ": {
+            "animal": "매력쟁이, 푸들: INTJ",
+            "explain": "1.생각이 많고 복잡한 성격임, 2.가끔 몇 일은 진지한 생각으로 거의 몇 시간을 씀, 3.타인이 하라는 것 보다는 내가 자유롭게 사는 방식이 더 좋음, 4.자기가 잘 하는 것은 겁나게 잘함, 5.망했다는 생각이나 나쁜 상황에서도 무덤덤하게 느낌, 6.완벽함을 추구함, 7.의외지만 연애 상대로 인기가 높음, 8.안정성보다는 모험을 더 좋아함, 9.자신의 생각보다 자기를 좋아하고 있을 사람들이 많을 수 있음",
+            "img": "푸들.jpg"
+        },
+        "ISTP": {
+            "animal": "다재다능 재주꾼, 파피용: ISTP",
+            "explain": "1.일을 효율적으로 함, 2.틀에 박힌 것을 싫어함, 3.새로운 것에 저항하지 않음, 4.관심 분야가 아니라면 절대 쳐다보지도 않음, 5.어떤일에 꽂힌다면 질리지도 않음, 6.현실감각이 뛰어나고 임기응변에 능함, 7.완벽주의 성향임, 8.도도하고 세련됨, 9.군대에서 탈이 없다면 자기 일만 신경쓰기 때문에 부하 입장에서 가장 최고의 상사임 ",
+            "img": "파피용.jpg"
+        },
+        "INFP": {
+            "animal": "열정가득한 중재자, 포메라니안: INFP",
+            "explain": "1.성격이 디테일함, 2.최악의 상황에서도 긍정적로 생각함, 3.규칙 같은 것을 싫어하고, 반복되는 일상은 재미 없다는 생각을 느낌, 4.가식적인 것을 매우 싫어함, 5.마음 속에서는 외로움과 소외감을 잘 느낌, 6.나의 의견보다는 타인의 의견을 더 중요시한다, 7.계획 등에 의존하는 것을 싫어하고 즉흥적이고 감정적인 경행이 많음, 8.타인에게 민폐 끼치는 것을 매우매우 싫어함, 9.자기가 하고 싶은 것에 대해 감정적이고 질투심이 높음",
+            "img": "포메라니안.jpg"
+        },
+        "INTP": {
+            "animal": "아이디어 뱅크, 닥스훈트: INTP",
+            "explain": "1.지적인 면이 뚜렷함, 2.혼자의 시간이 중요함, 3.모든 MBTI 유형 중 자신만의 시간이 뚜렷함, 4.호기심에 매우 흥미가 많음, 5.계획을 짜고 그것을 잘 실천함, 6.혼자서 할 수 있는 취미를 가지고 있을 가능서이 높음, 7.벼락치기를 좋아함 성과도 꽤 좋음, 8.무엇이 이해가 안돼면 이해가  될 때까지 찾아봄, 9.무종교일 확률이 높음,",
+            "img": "단스후늩.jpg"
+        },
+        "ESTP": {
+            "animal": "도ㅈ.. 아니 사업가, 시바견: ESTP",
+            "explain": "1.한가지에 집중하는 것을 어려워하고 지겨워 함, 2.내기를 좋아함, 3.삶을 매우 즐기며 삶, 4.직접적인 경험을 좋아함, 5.새로운 취미 등에 대한 도전 욕구가 매우 강함, 6.공부를 지겨워하고 (다 그렇다는 건 아님) 스포츠나 운동에 대한 움직이는 것을 더 좋아한다, 7.일을 조금씩 조금씩 처리하기 보다는 한번에 처리하는 걸 선호함, 8.감정을 아무 생각 없이 그대로 말해서 타인이 상처 받는 일이 많음, 9.알려주는 것이 이해가 잘 안된다면 이해 될 때까지 물어본다 (이해가 되어야 수긍을 함).",
+            "img": "도지.jpg"
+        },
+        "ESFP": {
+            "animal": "연예인, 비숑: ESFP",
+            "explain": "1.타인으르 기쁘게 해 줄 준비가 좋음, 2.싫은지 좋은지가 얼굴에 그대로 드러남 3.신나고 재밌는 성격임, 4.정이 많아 거절을 잘 못함, 5.집에 있으면 무기력하다는 생각이 들어서인지 쉬는 날에는 거의 대부분 외출을 함, 6.자기의 이야기를 상대방을 가리지 못하고 아무에게나 잘 털어놈, 7.가끔씩은 계획이 없고 충동적인 여행을 좋아함, 8.틀이란 것에 갇힌 것을 싫어하고 계획표 같은 것에 대해 계획을 지키는 것을 힘들어함, 9.덜렁거리는 게 심함, 10.개성이 매우매우 넘치고 매우매우 매력적임",
+            "img": "비숑.jpg"
+        },
+        "ESFJ": {
+            "animal": "외교관, 골든리트리버: ESFJ",
+            "explain": "1.신나는 성격임, 2.준비성이 철저하고 참을성이 많음, 3.멍 때리기를 잘함, 4.거짓말을 잘 하지 못하고 솔직함, 4.리액션이 꽤 좋음, 5.관심이 있는 것에 대한 기억력이 굉장히 좋음, 6.승부욕이 생긴다면 수단과 방법을 가리지 못 할만큼 주체를 못함, 7.원래 기억력이 겁나게 좋음",
+            "img": "골든리트리버.jpg"
+        },
+        "ENFJ": {
+            "animal": "사회운동가, 핀셔: ENFJ",
+            "explain": "1.사람에 대한 관심이 매우 높음, 2.자기관리를 철저히 함, 3.미리 계획을 세우고 그것을 지키려고 노력한다, 4.상처를 잘 받고 그 기억이 오래 가슴 속에 남는다, 5.임기응변이 능함, 6.마음이 약하고 남의 의견에 동화를 잘 하는 편임, 7.사람을 좋아하고 남에게 잘 맞춰줌, 8.정의로운 편임, 9.오지랖이 넓음 ",
+            "img": "핀셔.jpg"
+        },
+        "ISFJ": {
+            "animal": "수호자, 슈나우저: ISFJ",
+            "explain": "1.매우매우매우 솔직함, 2.눈치가 매우 빠름, 3.시간과 돈 등 쓸모 없는 낭비를 불편해하거나 싫어함, 4.약속을 중요하게 여김, 5.타인의 의견을 귀담아 들음, 6.화를 참았다~ 참았다 한번에 폭발함, 7.자신에게 엄격함, 8.노가다를 하는 것을 끝가지 하는 인내력이 있음, 9.부탁하는 것을 어려워함, 10.매우 섬세하고 꼼꼼함, 11.생각하는 것보다 표현이 적음",
+            "img": "슈나우저.jpg"
+        },
+        "ISFP": {
+            "animal": "호기심 넘치는, 치와와: ISFP",
+            "explain": "1.타인의 부탁을 거절하기 어려워함, 2.자신을 내세우지 않고 자기의 자랑이 없음, 3.이해력이 높음, 4.자신의 외모관리를 철저하게 함, 5.사람을 웬만해선 잘 의심하지 않는다, 6.틀에 묶이는 것을 싫어함, 7.생각은 넘치지만 행동이 부족함, 8.예술적으로 감각이 높음, 9.일반적으로는 인싸 이미지지만 그렀지만 친한 친구들과 있는다면 외향적으로 변함",
+            "img": "치와와.jpg"
+        },
+
+    }
+
+    window.onload = function() {
+        let num = 1;
+        const startButton = document.querySelector('.start button');
+        const questionSection = document.querySelector('.question');
+        const resultSection = document.querySelector('.result');
+        const progressBar = document.querySelector('.progress-bar');
+        const buttonA = document.getElementById('A');
+        const buttonB = document.getElementById('B');
+
+        if (startButton) {
+            startButton.addEventListener('click', start);
+        }
+
+        if (buttonA) {
+            buttonA.addEventListener('click', function() {
+                const type = document.getElementById('type').value;
+                const preValue = document.getElementById(type).value;
+                document.getElementById(type).value = parseInt(preValue) + 1;
+                next();
+            });
+        }
+
+        if (buttonB) {
+            buttonB.addEventListener('click', next);
+        }
+
+        function start() {
+            document.querySelector('.start').style.display = 'none';
+            if (questionSection) {
+                questionSection.style.display = 'block';
+            }
+            next();
+        }
+
+        function next() {
+            if (num == 13) {
+                if (questionSection) {
+                    questionSection.style.display = 'none';
+                }
+                if (resultSection) {
+                    resultSection.style.display = 'block';
+                }
+
+                // MBTI 결과 계산
+                let mbti = '';
+                mbti += document.getElementById('EI').value < 2 ? 'I' : 'E';
+                mbti += document.getElementById('SN').value < 2 ? 'N' : 'S';
+                mbti += document.getElementById('TF').value < 2 ? 'F' : 'T';
+                mbti += document.getElementById('JP').value < 2 ? 'P' : 'J';
+
+                // 결과 화면 업데이트
+                const imgElement = document.getElementById('img');
+                const animalElement = document.getElementById('animal');
+                const explainElement = document.getElementById('explain');
+
+                if (imgElement && result[mbti] && result[mbti].img) {
+                    imgElement.src = result[mbti].img;
+                }
+                if (animalElement && result[mbti] && result[mbti].animal) {
+                    animalElement.textContent = result[mbti].animal;
+                }
+                if (explainElement && result[mbti] && result[mbti].explain) {
+                    explainElement.textContent = result[mbti].explain;
+                }
+
+                // MBTI 값을 서버에 POST 요청으로 전송
+                fetch('http://localhost:5000/saveResult', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({mbti: mbti})
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log('서버 응답:', data);
+                    })
+                    .catch(error => {
+                        console.error('서버 전송 오류:', error);
+                    });
+
+            } else {
+                if (progressBar) {
+                    progressBar.style.width = `calc(100/12*${num}%)`;
+                }
+                const titleElement = document.getElementById('title');
+                const typeElement = document.getElementById('type');
+
+                if (titleElement && q[num] && q[num].title) {
+                    titleElement.textContent = q[num].title;
+                }
+                if (typeElement && q[num] && q[num].type) {
+                    typeElement.value = q[num].type;
+                }
+                if (buttonA && q[num] && q[num].A) {
+                    buttonA.textContent = q[num].A;
+                }
+                if (buttonB && q[num] && q[num].B) {
+                    buttonB.textContent = q[num].B;
+                }
+                num++;
+            }
+        }
+    }
+</script>
+</body>
+</html>
