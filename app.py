@@ -15,6 +15,7 @@ def home():
 
 @app.route('/submit_mbti', methods=['POST'])
 def submit_mbti():
+    print("Received request:", request.json)  # 이 줄을 추가
     mbti = request.json.get('mbti')
     # 새로운 식별자 생성 (현재 저장된 항목 수 + 1).
     identifier = len(mbti_storage) + 1

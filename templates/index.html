@@ -1,47 +1,217 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DBTI 테스트</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개BTI 성향조사</title>
     <style>
-        body {
-            background-color: #feeab5;
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #ede6e6;
         }
 
-        article {
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('static/images/bkpark.jpg') no-repeat center center;
+            background-size: cover;
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        .frame {
+            width: 50%;
+            height: 90%;
             display: flex;
             flex-direction: column;
+            position: relative;
+            border: 1px solid #d2d0d0;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.9);
         }
 
-        .question,.result {
-            display: none;
+        .character-section {
+            height: 35%;
+            position: relative;
+            overflow: hidden;
         }
-        button {
-            border: 4px solid gray;
-            margin: 0 auto;
+
+        .character-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dog, .person {
+            font-size: 100px;
+            position: absolute;
+            bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .person {
+            left: 20px;
+        }
+
+        .dog {
+            right: 20px;
+        }
+
+        .horizontal-line {
+            width: 100%;
+            height: 2px;
+            background-color: #000;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 50% 50%;
+            transform: scaleY(4);
+        }
+
+        .scroll-section {
+            height: 65%;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .scroll-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroll-section::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        .scroll-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .question {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 50vh; /* Increased spacing between questions */
+            text-align: center;
+        }
+
+        .question h2 {
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .option {
+            padding: 10px 20px;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 10px;
+            width: 40%;
+            max-width: 200px;
+        }
+
+        .option.selected {
+            background-color: rgb(33, 174, 255);
+            color: white;
+        }
+
+        .submit {
+            margin-top: 70px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
 <div class="container">
-    <!-- 강아지 성격 유형 테스크 시작 화면 -->
-    <article class="start">
-        <h1>강아지 성격 유형 테스트(DBTI)</h1>
-        <h2>12문제로 알아보는 내 강아지의 성격 유형은? 테스트로 알아보자!</h2>
-        <button type="button" onclick="start();">테스트 시작하기</button> <!-- 시작하기 버튼 누르면 start 가려지고 question 보임 -->
-    </article>
-
-    <!-- 강아지 성격 유형 테스트 화면, 버튼 2개로 답변 함-->
-    <article class="question">
-        <h2 id="title">문제</h2>
-        <input id="type" type="hidden" value="EI">
-        <button id="A" type="button">대답1</button>
-        <button id="B" type="button">대답2</button>
-    </article>
-
-    <!-- 결과 창, 결과 강아지와 설명을 출력 -->
-
+    <div class="background"></div>
+    <div class="frame">
+        <div class="character-section">
+            <img src="../static/images/bkpark.jpg" alt="Background">
+            <div class="person">🧍</div>
+            <div class="dog">🐕</div>
+            <div class="horizontal-line"></div>
+        </div>
+        <div class="scroll-section">
+            <div id="question-container"></div>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <svg width="150" height="150" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="90" fill="#f0f0f0"/>
+                <text x="50" y="120" font-size="80">🐕</text>
+            </svg>
+            <h2>나의 강아지 성향</h2>
+            <h1 id="result-mbti"></h1>
+            <p id="result-description"></p>
+        </div>
+    </div>
 </div>
 
 <input type="hidden" id="EI" value="0">
@@ -50,161 +220,183 @@
 <input type="hidden" id="JP" value="0">
 
 <script>
-    // 사람 MBTI 처럼 테스트를 한 후 최종적으로 DBTI로 리턴해줌
-
-    var num = 1;
-
-    var q = {
-        1: {
-            "title": "산책을 나가려고 하는데, 우리 강아지는?",
-            "type": "EI",
-            "A": "사람과 강아지가 많은 번화한 공원으로 가고 싶어한다",
-            "B": "조용하고 한적한 곳으로 가고 싶어한다"
-        },
-        2: {
-            "title": "산책 중 낯선 강아지를 만났을 때, 우리 강아지는?",
-            "type": "EI",
-            "A": "꼬리를 흔들며 반갑게 다가간다",
-            "B": "조심스럽게 냄새를 맡으며 경계한다"
-        },
-        3: {
-            "title": "공원에서 다른 강아지들이 놀고 있을 때, 우리 강아지는?",
-            "type": "EI",
-            "A": "신나게 달려가 함께 어울린다",
-            "B": "멀리서 구경만 하며 혼자 노는 걸 좋아한다"
-        },
-        4: {
-            "title": "산책로에 갈림길이 나왔을 때, 우리 강아지는?",
-            "type": "SN",
-            "A": "늘 가던 익숙한 길로 가려고 한다",
-            "B": "새로운 냄새가 나는 길로 호기심을 보인다"
-        },
-        5: {
-            "title": "다른 강아지가 길을 헤매고 있을 때, 우리 강아지는?",
-            "type": "SN",
-            "A": "상세하게 냄새로 길을 안내하려 노력한다",
-            "B": "대충 큰 길쪽으로 가라고 짖는다"
-        },
+    const q = {
+        1: {"title": "산책을 나가려고 하는데, 우리 강아지는?", "type": "EI", "A": "사람과 강아지가 많은 번화한 공원으로 가고 싶어한다", "B": "조용하고 한적한 곳으로 가고 싶어한다"},
+        2: {"title": "산책 중 낯선 강아지를 만났을 때, 우리 강아지는?", "type": "EI", "A": "꼬리를 흔들며 반갑게 다가간다", "B": "조심스럽게 냄새를 맡으며 경계한다"},
+        3: {"title": "공원에서 다른 강아지들이 놀고 있을 때, 우리 강아지는?", "type": "EI", "A": "신나게 달려가 함께 어울린다", "B": "멀리서 구경만 하며 혼자 노는 걸 좋아한다"},
+        4: {"title": "산책로에 갈림길이 나왔을 때, 우리 강아지는?", "type": "SN", "A": "늘 가던 익숙한 길로 가려고 한다", "B": "새로운 냄새가 나는 길로 호기심을 보인다"},
+        5: {"title": "다른 강아지가 길을 헤매고 있을 때, 우리 강아지는?", "type": "SN", "A": "상세하게 냄새로 길을 안내하려 노력한다", "B": "대충 큰 길쪽으로 가라고 짖는다"},
         6: {"title": "산책이 끝났을 때, 우리 강아지에게 중요해 보이는 건?", "type": "SN", "A": "집에 돌아왔다는 사실", "B": "산책하는 동안 경험한 것들"},
-        7: {
-            "title": "다른 강아지가 우울해 보일 때, 우리 강아지는?",
-            "type": "TF",
-            "A": "상황을 파악하려고 냄새를 맡는다",
-            "B": "다가가서 부비며 위로하려 한다"
-        },
-        8: {
-            "title": "다음 산책 약속을 잡을 때, 우리 강아지는?",
-            "type": "TF",
-            "A": "특정 시간에 맞춰 준비하고 기다린다",
-            "B": "아무 때나 산책 나갈 수 있게 들떠있다"
-        },
-        9: {
-            "title": "집에 돌아왔을 때 장난감이 어질러져 있으면, 우리 강아지는?",
-            "type": "TF",
-            "A": "장난감을 물어 제자리에 가져다 놓으려 한다",
-            "B": "신경 쓰지 않고 그대로 둔다"
-        },
+        7: {"title": "다른 강아지가 우울해 보일 때, 우리 강아지는?", "type": "TF", "A": "상황을 파악하려고 냄새를 맡는다", "B": "다가가서 부비며 위로하려 한다"},
+        8: {"title": "다음 산책 약속을 잡을 때, 우리 강아지는?", "type": "TF", "A": "특정 시간에 맞춰 준비하고 기다린다", "B": "아무 때나 산책 나갈 수 있게 들떠있다"},
+        9: {"title": "집에 돌아왔을 때 장난감이 어질러져 있으면, 우리 강아지는?", "type": "TF", "A": "장난감을 물어 제자리에 가져다 놓으려 한다", "B": "신경 쓰지 않고 그대로 둔다"},
         10: {"title": "밤이 되어 잠들기 전, 우리 강아지는?", "type": "JP", "A": "다음날 산책 갈 곳을 정하려는 듯 안절부절 못한다", "B": "별 생각 없이 편하게 잠든다"},
-        11: {
-            "title": "아침이 밝았을 때, 우리 강아지는?",
-            "type": "JP",
-            "A": "늘 일어나던 시간에 맞춰 일어난다",
-            "B": "내가 깨울 때까지 계속 잔다"
-        },
-        12: {
-            "title": "아침에 일어난 후, 우리 강아지가 가장 먼저 하는 행동은?",
-            "type": "JP",
-            "A": "항상 하던 대로 밥부터 먹고 화장실에 간다",
-            "B": "기분 내키는 대로 이것저것 한다"
+        11: {"title": "아침이 밝았을 때, 우리 강아지는?", "type": "JP", "A": "늘 일어나던 시간에 맞춰 일어난다", "B": "내가 깨울 때까지 계속 잔다"},
+        12: {"title": "아침에 일어난 후, 우리 강아지가 가장 먼저 하는 행동은?", "type": "JP", "A": "항상 하던 대로 밥부터 먹고 화장실에 간다", "B": "기분 내키는 대로 이것저것 한다"}
+    };
+
+    const scrollSection = document.querySelector('.scroll-section');
+    const person = document.querySelector('.person');
+    const dog = document.querySelector('.dog');
+    const questionContainer = document.getElementById('question-container');
+    const modal = document.getElementById('modal');
+    const closeBtn = document.querySelector('.close');
+
+    function createQuestions() {
+        const introDiv = document.createElement('div');
+        introDiv.className = 'question';
+        introDiv.style.marginTop = '65vh';  // 첫 번째 질문을 아래로 내립니다
+        introDiv.innerHTML = `
+            <h1>개BTI 성향조사</h1>
+            <p>아래로 스크롤하여 문항에 답해주세요.</p>
+        `;
+        questionContainer.appendChild(introDiv);
+
+        for (let i = 1; i <= 12; i++) {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            questionDiv.innerHTML = `
+                <h2>${i}. ${q[i].title}</h2>
+                <div class="options">
+                    <div class="option" data-type="${q[i].type}" data-value="1" title="${q[i].A}">${q[i].A}</div>
+                    <div class="option" data-type="${q[i].type}" data-value="0" title="${q[i].B}">${q[i].B}</div>
+                </div>
+            `;
+            questionContainer.appendChild(questionDiv);
+
+            // 12번 문항 아래에 결과 확인 버튼 추가
+            if (i === 12) {
+                const submitButton = document.createElement('button');
+                submitButton.className = 'submit';
+                submitButton.textContent = '결과 확인';
+                submitButton.addEventListener('click', checkAndShowResult);
+                questionDiv.appendChild(submitButton);
+            }
         }
     }
 
-    window.onload = function() {
-        let num = 1;
-        const startButton = document.querySelector('.start button');
-        const questionSection = document.querySelector('.question');
-        const resultSection = document.querySelector('.result');
-        const buttonA = document.getElementById('A');
-        const buttonB = document.getElementById('B');
-
-        if (startButton) {
-            startButton.addEventListener('click', start);
+    function checkAndShowResult() {
+        const unansweredQuestions = [];
+        for (let i = 1; i <= 12; i++) {
+            const questionDiv = document.querySelector(`.question:nth-child(${i + 1})`);
+            const selectedOption = questionDiv.querySelector('.option.selected');
+            if (!selectedOption) {
+                unansweredQuestions.push(i);
+            }
         }
 
-        if (buttonA) {
-            buttonA.addEventListener('click', function() {
-                const type = document.getElementById('type').value;
-                const preValue = document.getElementById(type).value;
-                document.getElementById(type).value = parseInt(preValue) + 1;
-                next();
+        if (unansweredQuestions.length > 0) {
+            const firstUnanswered = unansweredQuestions[0];
+            const questionToScroll = document.querySelector(`.question:nth-child(${firstUnanswered + 1})`);
+            questionToScroll.scrollIntoView({ behavior: 'smooth' });
+            alert(`${unansweredQuestions.join(', ')}번 문항에 답하지 않았습니다. 모든 문항에 답해주세요.`);
+        } else {
+            showResult();
+        }
+    }
+
+    questionContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            const type = event.target.getAttribute('data-type');
+            const value = parseInt(event.target.getAttribute('data-value'));
+            document.getElementById(type).value = parseInt(document.getElementById(type).value) + value;
+
+            const options = event.target.parentElement.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+
+            // Smooth scroll to the next question
+            const nextQuestion = event.target.closest('.question').nextElementSibling;
+            if (nextQuestion) {
+                nextQuestion.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+
+    function updateCharacterPositions() {
+        const progress = calculateProgress();
+        const containerWidth = document.querySelector('.character-section').offsetWidth;
+        const centerPosition = containerWidth / 2;
+
+        const personPosition = progress * (centerPosition - 50 - 40);
+        const dogPosition = progress * (centerPosition - 50 - 40);
+
+        person.style.transform = `translateX(${personPosition}px)`;
+        dog.style.transform = `translateX(-${dogPosition}px)`;
+    }
+
+    function calculateProgress() {
+        const scrollPosition = scrollSection.scrollTop;
+        const totalScrollHeight = scrollSection.scrollHeight - scrollSection.clientHeight;
+        return Math.min(scrollPosition / totalScrollHeight, 1);
+    }
+
+    function showResult() {
+        let mbti = '';
+        mbti += document.getElementById('EI').value < 2 ? 'I' : 'E';
+        mbti += document.getElementById('SN').value < 2 ? 'N' : 'S';
+        mbti += document.getElementById('TF').value < 2 ? 'F' : 'T';
+        mbti += document.getElementById('JP').value < 2 ? 'P' : 'J';
+
+        fetch('http://localhost:5000/submit_mbti', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({mbti: mbti}),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                document.getElementById('result-mbti').textContent = mbti;
+                document.getElementById('result-description').textContent = `이 강아지는 ${mbti} 성향을 가지고 있습니다.`;
+                modal.style.display = 'block';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('결과를 제출하는 중 오류가 발생했습니다. 다시 시도해 주세요.');
             });
-        }
-
-        if (buttonB) {
-            buttonB.addEventListener('click', next);
-        }
-
-        function start() {
-            document.querySelector('.start').style.display = 'none';
-            if (questionSection) {
-                questionSection.style.display = 'block';
-            }
-            next();
-        }
-
-        function next() {
-            if (num == 13) {
-                if (questionSection) {
-                    questionSection.style.display = 'none';
-                }
-                if (resultSection) {
-                    resultSection.style.display = 'block';
-                }
-
-                // MBTI 결과 계산
-                let mbti = '';
-                mbti += document.getElementById('EI').value < 2 ? 'I' : 'E';
-                mbti += document.getElementById('SN').value < 2 ? 'N' : 'S';
-                mbti += document.getElementById('TF').value < 2 ? 'F' : 'T';
-                mbti += document.getElementById('JP').value < 2 ? 'P' : 'J';
-                console.log(mbti);
-
-                // MBTI 결과를 서버로 전송
-                fetch('http://localhost:5000/submit_mbti', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({mbti: mbti}),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-
-            } else {
-                const titleElement = document.getElementById('title');
-                const typeElement = document.getElementById('type');
-
-                if (titleElement && q[num] && q[num].title) {
-                    titleElement.textContent = q[num].title;
-                }
-                if (typeElement && q[num] && q[num].type) {
-                    typeElement.value = q[num].type;
-                }
-                if (buttonA && q[num] && q[num].A) {
-                    buttonA.textContent = q[num].A;
-                }
-                if (buttonB && q[num] && q[num].B) {
-                    buttonB.textContent = q[num].B;
-                }
-                num++;
-            }
-        }
     }
+
+    scrollSection.addEventListener('scroll', updateCharacterPositions);
+    window.addEventListener('resize', updateCharacterPositions);
+    window.addEventListener('load', () => {
+        createQuestions();
+        updateCharacterPositions();
+    });
+
+    questionContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            const type = event.target.getAttribute('data-type');
+            const value = parseInt(event.target.getAttribute('data-value'));
+            document.getElementById(type).value = parseInt(document.getElementById(type).value) + value;
+
+            const options = event.target.parentElement.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+
+            // Smooth scroll to the next question
+            const nextQuestion = event.target.closest('.question').nextElementSibling;
+            if (nextQuestion) {
+                nextQuestion.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
 </script>
 </body>
 </html>
