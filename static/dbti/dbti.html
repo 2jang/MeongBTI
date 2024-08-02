@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개BTI 성향조사</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #ede6e6;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('bkpark.jpg') no-repeat center center;
+            background-size: cover;
+            filter: blur(5px);
+            z-index: -1;
+        }
+
+        .frame {
+            width: 50%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid #d2d0d0;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .character-section {
+            height: 35%;
+            position: relative;
+        }
+
+        .character-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dog, .person {
+            font-size: 100px;
+            position: absolute;
+            bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .person {
+            left: 20px;
+        }
+
+        .dog {
+            right: 20px;
+        }
+
+        .horizontal-line {
+            width: 90%;
+            height: 2px;
+            background-color: #000;
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            border-radius: 0 0 50% 50%;
+            transform: scaleY(4);
+        }
+
+        .scroll-section {
+            height: 65%;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+            font-size: 20px;
+        }
+
+        .scroll-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroll-section::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        .scroll-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .question {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .question h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .option {
+            padding: 10px 20px;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .option.selected {
+            background-color: rgb(33, 174, 255);
+            color: white;
+        }
+
+        .submit {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="background"></div>
+    <div class="frame">
+        <div class="character-section">
+            <img src="./images/bkpark.jpg">
+            <div class="person">🧍</div>
+            <div class="dog">🐕</div>
+            <div class="horizontal-line"></div>
+        </div>
+        <div class="scroll-section">
+            <div class="question">
+                <h1>개BTI 성향조사</h1>
+                <p>아래로 스크롤하여 문항에 답해주세요.</p>
+            </div>
+            <div class="question">
+                <h2>1. 당신의 개는 산책을 얼마나 좋아하나요?</h2>
+                <div class="options">
+                    <div class="option">매우 좋아함</div>
+                    <div class="option">보통</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>2. 당신의 개는 낯선 사람을 만났을 때 어떻게 반응하나요?</h2>
+                <div class="options">
+                    <div class="option">친근하게 다가감</div>
+                    <div class="option">경계함</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>3. 당신의 개는 다른 개들과 잘 어울리나요?</h2>
+                <div class="options">
+                    <div class="option">매우 사교적임</div>
+                    <div class="option">혼자 있는 것을 선호함</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>4. 당신의 개는 새로운 장난감에 대해 어떻게 반응하나요?</h2>
+                <div class="options">
+                    <div class="option">즉시 관심을 보임</div>
+                    <div class="option">무관심함</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>5. 당신의 개는 큰 소리에 어떻게 반응하나요?</h2>
+                <div class="options">
+                    <div class="option">겁을 먹음</div>
+                    <div class="option">별 반응 없음</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>6. 당신의 개는 음식에 대해 얼마나 관심이 있나요?</h2>
+                <div class="options">
+                    <div class="option">매우 관심이 많음</div>
+                    <div class="option">적당히 관심 있음</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>7. 당신의 개는 얼마나 자주 짖나요?</h2>
+                <div class="options">
+                    <div class="option">자주 짖음</div>
+                    <div class="option">거의 짖지 않음</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>8. 당신의 개는 얼마나 활동적인가요?</h2>
+                <div class="options">
+                    <div class="option">매우 활동적임</div>
+                    <div class="option">조용하고 차분함</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>9. 당신의 개는 혼자 있을 때 어떻게 지내나요?</h2>
+                <div class="options">
+                    <div class="option">불안해함</div>
+                    <div class="option">잘 지냄</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>10. 당신의 개는 새로운 환경에 얼마나 빨리 적응하나요?</h2>
+                <div class="options">
+                    <div class="option">빠르게 적응함</div>
+                    <div class="option">적응에 시간이 걸림</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>11. 당신의 개는 훈련에 얼마나 잘 반응하나요?</h2>
+                <div class="options">
+                    <div class="option">매우 잘 따름</div>
+                    <div class="option">고집이 있음</div>
+                </div>
+            </div>
+            <div class="question">
+                <h2>12. 당신의 개는 주인과 떨어져 있을 때 어떤 모습인가요?</h2>
+                <div class="options">
+                    <div class="option">매우 그리워함</div>
+                    <div class="option">독립적으로 지냄</div>
+                </div>
+                <button class="submit">결과 확인</button>
+            </div>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <svg width="150" height="150" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="90" fill="#f0f0f0"/>
+                <text x="50" y="120" font-size="80">🐕</text>
+            </svg>
+            <h2>나의 강아지 성향</h2>
+            <h1>ISTP</h1>  <!-- js로 불러오기 -->
+            <p>이 강아지는 소심한가?</p>  <!-- js로 불러오기 -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const scrollSection = document.querySelector('.scroll-section');
+    const person = document.querySelector('.person');
+    const dog = document.querySelector('.dog');
+    const options = document.querySelectorAll('.option');
+    const questions = document.querySelectorAll('.question');
+    const submitBtn = document.querySelector('.submit');
+    const modal = document.getElementById('modal');
+    const closeBtn = document.querySelector('.close');
+
+    function updateCharacterPositions() {
+        const progress = calculateProgress();
+        const containerWidth = document.querySelector('.character-section').offsetWidth;
+        const centerPosition = containerWidth / 2;
+
+        const personPosition = progress * (centerPosition - 50 - 40);
+        const dogPosition = progress * (centerPosition - 50 - 40);
+
+        person.style.transform = `translateX(${personPosition}px)`;
+        dog.style.transform = `translateX(-${dogPosition}px)`;
+    }
+
+    function calculateProgress() {
+        const scrollPosition = scrollSection.scrollTop;
+        const totalScrollHeight = scrollSection.scrollHeight - scrollSection.clientHeight;
+        return Math.min(scrollPosition / totalScrollHeight, 1);
+    }
+
+    function handleResize() {
+        updateCharacterPositions();
+    }
+
+    scrollSection.addEventListener('scroll', updateCharacterPositions);
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('load', updateCharacterPositions);
+
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            const parent = option.parentElement;
+            parent.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+        });
+    });
+
+    submitBtn.addEventListener('click', () => {
+        modal.style.display = 'block';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>
