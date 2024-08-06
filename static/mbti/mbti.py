@@ -50,7 +50,6 @@ for mbti in mbti_types:
         results.append({
             'MBTI': mbti.upper(),
             'Type Name': type_name,
-            'Type Code': type_code,
             'Description': type_description
         })
 
@@ -67,10 +66,10 @@ for mbti in mbti_types:
 
 #크롤링 결과 파일 저장
 # CSV 파일로 결과 저장
-FILE = "/mbti/csv/mbti_types.csv"
+FILE = "csv/mbti_types.csv"
 with open(FILE, 'w', newline='', encoding='utf-8') as file:
     # CSV 작성을 위한 DictWriter 객체 생성
-    writer = csv.DictWriter(file, fieldnames=['MBTI', 'Type Name', 'Type Code', 'Description'])
+    writer = csv.DictWriter(file, fieldnames=['MBTI', 'Type Name', 'Description'])
     # 헤더 작성
     writer.writeheader()
     # 각 결과를 CSV 파일에 작성
