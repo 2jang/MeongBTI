@@ -45,7 +45,7 @@ for mbti in mbti_types:
 
         # end 크롤링 할 리소스 찾기
 
-        #결과 리스트로 생성
+        # 결과 리스트로 생성
         # 결과를 딕셔너리로 만들어 결과 리스트에 추가
         results.append({
             'MBTI': mbti.upper(),
@@ -53,18 +53,18 @@ for mbti in mbti_types:
             'Description': type_description
         })
 
-        #end 결과 리스트로 생성
+        # end 결과 리스트로 생성
 
-        #디버그 로깅
+        # 디버그 로깅
         # 크롤링 진행 상황 출력 (설명의 처음 50자만 표시)
         print(f"Crawled {mbti.upper()}: {type_description[:50]}...")
     except Exception as e:
         # 오류 발생 시 오류 메시지 출력
         print(f"Error crawling {mbti.upper()}: {str(e)}")
 
-        #end 디버그 로깅
+        # end 디버그 로깅
 
-#크롤링 결과 파일 저장
+# 크롤링 결과 파일 저장
 # CSV 파일로 결과 저장
 FILE = "csv/mbti_types.csv"
 with open(FILE, 'w', newline='', encoding='utf-8') as file:
@@ -75,7 +75,7 @@ with open(FILE, 'w', newline='', encoding='utf-8') as file:
     # 각 결과를 CSV 파일에 작성
     for result in results:
         writer.writerow(result)
-#end 크롤링 결과 파일 저장
+# end 크롤링 결과 파일 저장
 
 # 크롤링 완료 메시지 출력
 print("Crawling completed. Results saved " + FILE)

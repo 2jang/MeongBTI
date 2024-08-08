@@ -2,6 +2,7 @@ import csv
 import subprocess
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+
 app = Flask(__name__)
 CORS(app)
 
@@ -13,6 +14,7 @@ dbti_info = {}
 mbti_info = {}
 dog_match = {}
 
+
 # CSV 파일에서 DBTI 정보를 읽어오는 함수
 def read_dbti_info():
     csv_path = "static/dbti/csv/dbti_types.csv"
@@ -22,6 +24,7 @@ def read_dbti_info():
             dbti_info[row['DBTI']] = row
     print(f"총 {len(dbti_info)} 개의 DBTI 정보를 읽었습니다.")
 
+
 # CSV 파일에서 MBTI 정보를 읽어오는 함수
 def read_mbti_info():
     with open('static/mbti/csv/mbti_types.csv', 'r', encoding='utf-8-sig') as file:
@@ -29,6 +32,7 @@ def read_mbti_info():
         for row in csv_reader:
             mbti_info[row['MBTI']] = row
     print(f"총 {len(mbti_info)} 개의 MBTI 정보를 읽었습니다.")
+
 
 # CSV 파일에서 Dog 매칭 정보를 읽어오는 함수
 def read_dog_match():
@@ -38,14 +42,17 @@ def read_dog_match():
             dog_match[row['MBTI']] = row
     print(f"총 {len(dog_match)} 개의 강아지 추천 리스트 정보를 읽었습니다.")
 
+
 # 데이터 로드
 read_dbti_info()
 read_mbti_info()
 read_dog_match()
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/submit_dbti', methods=['POST'])
 def submit_dbti():
@@ -53,6 +60,7 @@ def submit_dbti():
     print("Received request:", request.json)
     latest_dbti_result = request.json.get('dbti')
     return jsonify({"message": "DBTI 저장 완료"}), 200
+
 
 @app.route('/kakao_api', methods=['POST'])
 def kakao_api():
@@ -128,6 +136,7 @@ def kakao_api():
             }
         })
 
+
 @app.route('/mbti_api', methods=['POST'])
 def mbti_api():
     data = request.get_json()
@@ -176,7 +185,7 @@ def mbti_api():
                                 "webLinkUrl": wiki_url
                             },
                             {
-                                "action":  "share",
+                                "action": "share",
                                 "label": "결과 공유하기"
                             }
                         ]
@@ -185,6 +194,7 @@ def mbti_api():
             ]
         }
     })
+
 
 @app.route('/api/speech', methods=['POST'])
 def speechCall():
@@ -210,6 +220,7 @@ def speechCall():
         }
     }
     return responseBody
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
