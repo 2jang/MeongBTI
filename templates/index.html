@@ -414,13 +414,13 @@
         mbti += document.getElementById('JP').value < 2 ? 'P' : 'J';
 
         let dbti = convertMBTItoDBTI(mbti);
-
-        fetch('/submit_mbti', {
+        /* 추가한것 : dbti 정보를 app.py로 넘겨주는거 */
+        fetch('/submit_dbti', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({mbti: mbti, dbti: dbti}),
+            body: JSON.stringify({dbti: dbti}),
         })
             .then(response => {
                 if (!response.ok) {
@@ -433,6 +433,7 @@
                 document.getElementById('result-mbti').textContent = dbti;
                 document.getElementById('result-description').textContent = `당신의 강아지는 ${dbti} 성향을 가지고 있습니다.`;
                 modal.style.display = 'block';
+
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -446,11 +447,12 @@
             });
     }
 
+    /* 추가한것 : mbti처럼 검사를 했는데 이를 DBTI로 변환해주는거 */
     function convertMBTItoDBTI(mbti) {
         const mbtiToDBTI = {
-            'ISTJ': 'WNIL', 'ENTP': 'WSEA', 'ENTJ': 'WSEL', 'ENFP': 'WNEA',
+            'ISTJ': 'WNIL', 'ENTP': 'WTEA', 'ENTJ': 'WTEL', 'ENFP': 'WNEA',
             'ESTJ': 'WNEL', 'INFJ': 'CTIL', 'INTJ': 'WTIL', 'ISTP': 'WNIA',
-            'INFP': 'CTIA', 'INTP': 'WTIA', 'ESTP': 'WNEA', 'ESFP': 'CNEA',
+            'INFP': 'CTIA', 'INTP': 'WTIA', 'ESTP': 'WTEA', 'ESFP': 'CNEA',
             'ESFJ': 'CNEL', 'ENFJ': 'CTEL', 'ISFJ': 'CNIL', 'ISFP': 'CNIA'
         };
 
