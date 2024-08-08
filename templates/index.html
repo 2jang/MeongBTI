@@ -303,7 +303,12 @@
         9: {"title": "집에 돌아왔을 때 장난감이 어질러져 있으면?", "type": "TF", "A": "장난감을 물어 제자리에 가져다 놓으려 한다", "B": "신경 쓰지 않고 그대로 둔다"},
         10: {"title": "밤이 되어 잠들기 전,", "type": "JP", "A": "다음날 산책 갈 곳을 정하려는 듯 안절부절 못한다", "B": "별 생각 없이 편하게 잠든다"},
         11: {"title": "아침이 밝았을 때,", "type": "JP", "A": "늘 일어나던 시간에 맞춰 일어난다", "B": "내가 깨울 때까지 계속 잔다"},
-        12: {"title": "아침에 일어난 후, 가장 먼저 하는 행동은?", "type": "JP", "A": "항상 하던 대로 밥부터 먹고 화장실에 간다", "B": "기분 내키는 대로 이것저것 한다"}
+        12: {
+            "title": "아침에 일어난 후, 가장 먼저 하는 행동은?",
+            "type": "JP",
+            "A": "항상 하던 대로 밥부터 먹고 화장실에 간다",
+            "B": "기분 내키는 대로 이것저것 한다"
+        }
     };
 
     const scrollSection = document.querySelector('.scroll-section');
@@ -347,7 +352,7 @@
         document.getElementById('start-button').addEventListener('click', () => {
             const firstQuestion = document.querySelector('.question:not(.intro)');
             if (firstQuestion) {
-                firstQuestion.scrollIntoView({ behavior: 'smooth' });
+                firstQuestion.scrollIntoView({behavior: 'smooth'});
             }
         });
     }
@@ -383,7 +388,7 @@
             // Smooth scroll to the next question
             const nextQuestion = event.target.closest('.question').nextElementSibling;
             if (nextQuestion) {
-                nextQuestion.scrollIntoView({ behavior: 'smooth' });
+                nextQuestion.scrollIntoView({behavior: 'smooth'});
             }
         }
     });
@@ -400,7 +405,7 @@
 
         if (unansweredQuestions.length > 0) {
             alert(`${unansweredQuestions.join(', ')}번 문항에 답하지 않았습니다. 모든 문항에 답해주세요.`);
-            document.querySelector(`.question:nth-child(${unansweredQuestions[0] + 1})`).scrollIntoView({ behavior: 'smooth' });
+            document.querySelector(`.question:nth-child(${unansweredQuestions[0] + 1})`).scrollIntoView({behavior: 'smooth'});
         } else {
             showResult();
         }
