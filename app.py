@@ -80,7 +80,7 @@ def kakao_api():
                 "outputs": [
                     {
                         "simpleText": {
-                            "text": f"당신의 강아지는 {latest_dbti_result} 성향을 가지고 있습니다."
+                            "text": f"견주님의   강아지는 {latest_dbti_result} 성향을 가지고 있습니다."
                         }
                     },
                     {
