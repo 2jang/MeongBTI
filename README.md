@@ -25,9 +25,9 @@
 
 ## 기술 스택
 
-| Python |   Flask   | BeautifulSoup | Speech Recognition | CSV    | Streamlit |
-|:------:|:---------:|:-------------:|:------------------:|--------|-----------|
-| ![py]  | ![flask]  |    ![bs]      |      ![sr]         | ![csv] | ![sl]     |
+|                             Python                             |                               Flas                                |                         BeautifulSoup                          |                       Speech Recognition                       | CSV                                                             | Streamlit                                                      |
+|:--------------------------------------------------------------:|:-----------------------------------------------------------------:|:--------------------------------------------------------------:|:--------------------------------------------------------------:|-----------------------------------------------------------------|----------------------------------------------------------------|
+| <img src="static/images/readme/py.png" width="50" height="50"> | <img src="static/images/readme/flask.png" width="50" height="50"> | <img src="static/images/readme/bs.png" width="50" height="50"> | <img src="static/images/readme/sr.png" width="50" height="50"> | <img src="static/images/readme/csv.png" width="50" height="50"> | <img src="static/images/readme/sl.png" width="50" height="50"> |
 
 <br>
 
@@ -53,14 +53,5 @@
 </h4>
 
 <br>
-
-<!-- Stack Icon Refernces -->
-
-[py]: static/images/readme/py.png
-[flask]: static/images/readme/flask.png
-[bs]: static/images/readme/bs.png
-[sr]: static/images/readme/sr.png
-[csv]: static/images/readme/csv.png
-[sl]: static/images/readme/sl.png
 
 
