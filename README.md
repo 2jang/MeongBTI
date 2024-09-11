@@ -25,7 +25,7 @@
 
 ## 기술 스택
 
-|                             Python                             |                               Flas                                |                         BeautifulSoup                          |                       Speech Recognition                       | CSV                                                             | Streamlit                                                      |
+|                             Python                             |                               Flask                                |                         BeautifulSoup                          |                       Speech Recognition                       | CSV                                                             | Streamlit                                                      |
 |:--------------------------------------------------------------:|:-----------------------------------------------------------------:|:--------------------------------------------------------------:|:--------------------------------------------------------------:|-----------------------------------------------------------------|----------------------------------------------------------------|
 | <img src="static/images/readme/py.png" width="50" height="50"> | <img src="static/images/readme/flask.png" width="50" height="50"> | <img src="static/images/readme/bs.png" width="50" height="50"> | <img src="static/images/readme/sr.png" width="50" height="50"> | <img src="static/images/readme/csv.png" width="50" height="50"> | <img src="static/images/readme/sl.png" width="50" height="50"> |
 
