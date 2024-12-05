@@ -1,7 +1,8 @@
 import csv
-import subprocess
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
+import os
+from static.stt.voice_assistant import recognize_speech, search_type
 
 app = Flask(__name__)
 CORS(app)
@@ -22,7 +23,6 @@ def read_dbti_info():
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
             dbti_info[row['DBTI']] = row
-    print(f"총 {len(dbti_info)} 개의 DBTI 정보를 읽었습니다.")
 
 
 # CSV 파일에서 MBTI 정보를 읽어오는 함수
@@ -31,7 +31,6 @@ def read_mbti_info():
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
             mbti_info[row['MBTI']] = row
-    print(f"총 {len(mbti_info)} 개의 MBTI 정보를 읽었습니다.")
 
 
 # CSV 파일에서 Dog 매칭 정보를 읽어오는 함수
@@ -40,7 +39,6 @@ def read_dog_match():
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
             dog_match[row['MBTI']] = row
-    print(f"총 {len(dog_match)} 개의 강아지 추천 리스트 정보를 읽었습니다.")
 
 
 # 데이터 로드
@@ -57,7 +55,6 @@ def home():
 @app.route('/submit_dbti', methods=['POST'])
 def submit_dbti():
     global latest_dbti_result
-    print("Received request:", request.json)
     latest_dbti_result = request.json.get('dbti')
     return jsonify({"message": "DBTI 저장 완료"}), 200
 
@@ -162,47 +159,6 @@ def mbti_api():
     dog_name = dog_data['Dog'].split(', ')[-1] if ', ' in dog_data['Dog'] else dog_data['Dog']
     wiki_url = f"https://namu.wiki/w/{dog_name}"
 
-    return jsonify({
-        "version": "2.0",
-        "template": {
-            "outputs": [
-                {
-                    "simpleText": {
-                        "text": f"이용자님은 MBTI가 {mbti}로 {mbti_data['Type Name']}입니다.\n{mbti_data['Description']}"
-                    }
-                },
-                {
-                    "basicCard": {
-                        "title": dog_data['Dog'],
-                        "description": dog_data['Personality'],
-                        "thumbnail": {
-                            "imageUrl": dog_data['Img URL']
-                        },
-                        "buttons": [
-                            {
-                                "action": "webLink",
-                                "label": "더 자세히 알아보기",
-                                "webLinkUrl": wiki_url
-                            },
-                            {
-                                "action": "share",
-                                "label": "결과 공유하기"
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    })
-
-
-@app.route('/api/speech', methods=['POST'])
-def speechCall():
-    body = request.get_json()
-    print(body)
-    print(body['userRequest']['utterance'])
-    subprocess.Popen(["streamlit", "run", "static/stt/voice_assistant.py"])
-
     responseBody = {
         "version": "2.0",
         "template": {
@@ -213,13 +169,46 @@ def speechCall():
                         "description": "음성 인식은 1개국어만 지원합니다.\n(한국어, 영어)\n자동으로 리다이렉트 됩니다",
                         "thumbnail": {
                             "imageUrl": "https://i.ibb.co/SmT95WX/cat-meme.jpg"
-                        }
+                        },
+                        "buttons": [
+                            {
+                                "action": "webLink",
+                                "label": "더 자세히 알아보기",
+                                "webLinkUrl": ""
+                            }
+                        ]
                     }
                 }
             ]
         }
     }
     return responseBody
+
+@app.route('/sttmenu')
+def stt():
+    return render_template('index2.html')
+
+@app.route('/stt')
+def stt():
+    return render_template('index2.html')
+
+
+@app.route('/api/speech', methods=['POST'])
+def speech_call():
+    try:
+        text = recognize_speech()  # 음성 인식 실행
+
+        type_name, result = search_type(text)
+
+        if result is None:
+            return jsonify({"message": "음성 인식 실패 또는 해당 데이터 없음"}), 400
+
+        return jsonify({
+            "type": type_name,
+            "result": result
+        })
+    except Exception as e:
+        return jsonify({"message": f"서버 오류: {str(e)}"}), 500
 
 
 if __name__ == '__main__':
